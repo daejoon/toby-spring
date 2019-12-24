@@ -31,7 +31,7 @@ $ docker run \
 
 ### Root로 접속
 ```
-$ mysql -hlocalhost -uroot -p 
+$ mysql -h127.0.0.1 -uroot -p 
 ```
 
 ### springbook 데이터베이스 생성
