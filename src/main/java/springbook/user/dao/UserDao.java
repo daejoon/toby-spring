@@ -12,25 +12,22 @@ import java.sql.SQLException;
 public class UserDao {
 
     private DataSource dataSource;
+    private JdbcContext jdbcContext;
 
     public void setDataSource(DataSource dataSource) {
+        this.jdbcContext = new JdbcContext();
+        this.jdbcContext.setDataSource(dataSource);
         this.dataSource = dataSource;
     }
 
+
     public void add(User user) throws SQLException {
-        Connection c = dataSource.getConnection();
+        String query = "INSERT INTO users(id, name, password) VALUES (?, ?, ?)";
+        String id = user.getId();
+        String name = user.getName();
+        String password = user.getPassword();
 
-        PreparedStatement ps = c.prepareStatement(
-                "INSERT INTO users(id, name, password) VALUES (?, ?, ?)");
-
-        ps.setString(1, user.getId());
-        ps.setString(2, user.getName());
-        ps.setString(3, user.getPassword());
-
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+        jdbcContext.executeInsert(query, id, name, password);
     }
 
     public User get(String id) throws SQLException {
@@ -57,29 +54,28 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        Connection c = dataSource.getConnection();
-
-        PreparedStatement ps = c.prepareStatement("DELETE FROM users");
-        ps.executeQuery();
-
-        ps.close();
-        c.close();
+        jdbcContext.executeSql("DELETE FROM users");
     }
+
 
     public int getCount() throws SQLException {
 
-        Connection c = dataSource.getConnection();
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        PreparedStatement ps = c.prepareStatement("SELECT count(*) FROM users");
-
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
-
-        rs.close();
-        ps.close();
-        c.close();
-
-        return count;
+        try {
+            c = dataSource.getConnection();
+            ps = c.prepareStatement("SELECT count(*) FROM users");
+            rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
     }
 }

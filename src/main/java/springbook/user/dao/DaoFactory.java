@@ -29,6 +29,7 @@ public class DaoFactory {
         return new DConnectionMaker();
     }
 
+    @Bean
     public DataSource dataSource() {
 
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
@@ -38,4 +39,5 @@ public class DaoFactory {
         dataSource.setPassword("book");
         return dataSource;
     }
+
 }
