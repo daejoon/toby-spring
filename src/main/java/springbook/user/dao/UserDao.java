@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.RowMapper;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserDao {
@@ -24,7 +23,7 @@ public class UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void add(User user) throws SQLException {
+    public void add(User user) {
 
         jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES (?, ?, ?)",
                 user.getId(),
@@ -33,22 +32,22 @@ public class UserDao {
         );
     }
 
-    public User get(String id) throws SQLException {
+    public User get(String id) {
 
         return this.jdbcTemplate.queryForObject("SELECT  * FROM users WHERE id = ?", new Object[]{id}, userRowMapper);
     }
 
-    public List<User> getAll() throws SQLException {
+    public List<User> getAll() {
 
         return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id ASC", userRowMapper);
     }
 
-    public void deleteAll() throws SQLException {
+    public void deleteAll() {
 
         jdbcTemplate.update("DELETE FROM users");
     }
 
-    public int getCount() throws SQLException {
+    public int getCount() {
 
         return this.jdbcTemplate.queryForObject("SELECT count(*) FROM users", (rs, rowNum) -> rs.getInt(1));
     }
