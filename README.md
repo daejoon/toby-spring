@@ -15,3 +15,10 @@ create table users (
     password varchar(10) not null
 )
 ```
+
+## 5장 서비스 추상화
+```
+alter table users add column level int not null;
+alter table users add column login int not null;
+alter table users add column recommend int not null;
+```

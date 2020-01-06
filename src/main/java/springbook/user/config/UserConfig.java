@@ -1,13 +1,20 @@
-package springbook.user.dao;
+package springbook.user.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
+import springbook.user.dao.ConnectionMaker;
+import springbook.user.dao.CountingConnectionMaker;
+import springbook.user.dao.DConnectionMaker;
+import springbook.user.dao.UserDao;
+import springbook.user.service.UserService;
 
 import javax.sql.DataSource;
 
 @Configuration
-public class DaoFactory {
+public class UserConfig {
 
     @Bean
     public UserDao userDao() {
@@ -15,6 +22,14 @@ public class DaoFactory {
         UserDao userDao = new UserDao();
         userDao.setDataSource(dataSource());
         return userDao;
+    }
+
+    @Bean
+    public UserService userService() {
+        UserService userService = new UserService();
+        userService.setUserDao(userDao());
+        userService.setTransactionManager(platformTransactionManager());
+        return userService;
     }
 
     @Bean
@@ -38,6 +53,11 @@ public class DaoFactory {
         dataSource.setUsername("spring");
         dataSource.setPassword("book");
         return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager platformTransactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 
 }

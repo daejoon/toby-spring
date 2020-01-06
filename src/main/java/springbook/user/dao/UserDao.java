@@ -2,6 +2,7 @@ package springbook.user.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -15,6 +16,9 @@ public class UserDao {
         user.setId(rs.getString("id"));
         user.setName(rs.getString("name"));
         user.setPassword(rs.getString("password"));
+        user.setLevel(Level.valueOf(rs.getInt("level")));
+        user.setLogin(rs.getInt("login"));
+        user.setRecommend(rs.getInt("recommend"));
         return user;
     };
 
@@ -25,10 +29,13 @@ public class UserDao {
 
     public void add(User user) {
 
-        jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES (?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO users(id, name, password, level, login, recommend) VALUES (?, ?, ?, ?, ?, ?)",
                 user.getId(),
                 user.getName(),
-                user.getPassword()
+                user.getPassword(),
+                user.getLevel().intValue(),
+                user.getLogin(),
+                user.getRecommend()
         );
     }
 
@@ -50,5 +57,22 @@ public class UserDao {
     public int getCount() {
 
         return this.jdbcTemplate.queryForObject("SELECT count(*) FROM users", (rs, rowNum) -> rs.getInt(1));
+    }
+
+    public void update(User user) {
+        this.jdbcTemplate.update(
+                "UPDATE users set name = ?" +
+                        ", password = ?" +
+                        ", level = ?" +
+                        ", login = ?" +
+                        ", recommend = ?" +
+                        " WHERE id = ?",
+                user.getName(),
+                user.getPassword(),
+                user.getLevel().intValue(),
+                user.getLogin(),
+                user.getRecommend(),
+                user.getId()
+        );
     }
 }

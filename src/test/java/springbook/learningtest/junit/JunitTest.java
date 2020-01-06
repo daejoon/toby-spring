@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import springbook.user.dao.DaoFactory;
+import springbook.user.config.UserConfig;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(
         loader = AnnotationConfigContextLoader.class,
         classes = {
-                DaoFactory.class
+                UserConfig.class
         }
 )
 public class JunitTest {
