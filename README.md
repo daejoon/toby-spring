@@ -21,4 +21,5 @@ create table users (
 alter table users add column level int not null;
 alter table users add column login int not null;
 alter table users add column recommend int not null;
+alter table users add column email varchar(100) not null;
 ```

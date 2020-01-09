@@ -43,11 +43,11 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
         users = Arrays.asList(
-                new User("bumjin", "박범진", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER-1, 0),
-                new User("joytouch", "강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
-                new User("erwins", "신승한", "p3", Level.SILVER, 06, MIN_RECOMMEND_FOR_GOLD-1),
-                new User("madnite1", "이상호", "p4", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
-                new User("green", "오민규", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+                new User("bumjin", "박범진", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER-1, 0, "bumjin@test.co.kr"),
+                new User("joytouch", "강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0, "joytouch@test.co.kr"),
+                new User("erwins", "신승한", "p3", Level.SILVER, 06, MIN_RECOMMEND_FOR_GOLD-1, "erwins@test.co.kr"),
+                new User("madnite1", "이상호", "p4", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD, "madnite1@test.co.kr"),
+                new User("green", "오민규", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "green@test.co.kr")
         );
     }
 
