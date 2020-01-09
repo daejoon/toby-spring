@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -37,6 +38,8 @@ public class UserServiceTest {
     private UserDao userDao;
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private MailSender mailSender;
 
     private List<User> users;
 
@@ -99,6 +102,8 @@ public class UserServiceTest {
     public void upgradeAllOrNothing() {
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
+        testUserService.setMailSender(this.mailSender);
+
         userDao.deleteAll();
         for (User user : users) {
             userDao.add(user);

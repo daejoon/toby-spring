@@ -4,11 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.ConnectionMaker;
 import springbook.user.dao.CountingConnectionMaker;
 import springbook.user.dao.DConnectionMaker;
 import springbook.user.dao.UserDao;
+import springbook.user.service.DummyMailSender;
 import springbook.user.service.UserService;
 
 import javax.sql.DataSource;
@@ -58,6 +60,14 @@ public class UserConfig {
     @Bean
     public PlatformTransactionManager platformTransactionManager() {
         return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Bean
+    public MailSender mailSender() {
+//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+//        mailSender.setHost("mail.server.com");
+//        return mailSender;
+        return new DummyMailSender();
     }
 
 }

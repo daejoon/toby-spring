@@ -23,9 +23,11 @@ repositories {
 dependencies {
     compile("org.springframework:spring-core:${springVersion}")
     compile("org.springframework:spring-context:${springVersion}")
+    compile("org.springframework:spring-context-support:${springVersion}")
     compile("org.springframework:spring-jdbc:${springVersion}")
     testCompile("org.springframework:spring-test:${springVersion}")
     testCompile("junit:junit:4.12")
     testCompile("org.mockito:mockito-core:3.2.4")
     compile("org.mariadb.jdbc:mariadb-java-client:2.5.2")
+    compile("javax.mail:javax.mail-api:1.6.2")
 }
