@@ -6,11 +6,12 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
+import springbook.learningtest.factory.MessageFactoryBean;
 import springbook.user.dao.*;
 import springbook.user.service.DummyMailSender;
+import springbook.user.service.TxProxyFactoryBean;
 import springbook.user.service.UserService;
 import springbook.user.service.UserServiceImpl;
-import springbook.user.service.UserServiceTx;
 
 import javax.sql.DataSource;
 
@@ -25,11 +26,13 @@ public class UserConfig {
     }
 
     @Bean("userService")
-    public UserService userServiceTx() {
-        UserServiceTx userServiceTx = new UserServiceTx();
-        userServiceTx.setTransactionManager(platformTransactionManager());
-        userServiceTx.setUserService(userService());
-        return userServiceTx;
+    public TxProxyFactoryBean userServiceTx() {
+        TxProxyFactoryBean txProxyFactoryBean = new TxProxyFactoryBean();
+        txProxyFactoryBean.setTarget(userService());
+        txProxyFactoryBean.setTransactionManager(platformTransactionManager());
+        txProxyFactoryBean.setPattern("upgradeLevels");
+        txProxyFactoryBean.setServiceInstance(UserService.class);
+        return txProxyFactoryBean;
     }
 
     @Bean("userServiceImpl")
@@ -74,6 +77,13 @@ public class UserConfig {
 //        mailSender.setHost("mail.server.com");
 //        return mailSender;
         return new DummyMailSender();
+    }
+
+    @Bean("message")
+    public MessageFactoryBean messageFactoryBean() {
+        MessageFactoryBean messageFactoryBean = new MessageFactoryBean();
+        messageFactoryBean.setText("Factory Bean");
+        return messageFactoryBean;
     }
 
 }
