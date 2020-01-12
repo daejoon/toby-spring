@@ -1,82 +1,19 @@
 package springbook.user.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
-import javax.sql.DataSource;
 import java.util.List;
 
-public class UserDao {
+public interface UserDao {
+    void add(User user);
 
-    private JdbcTemplate jdbcTemplate;
-    private RowMapper<User> userRowMapper = (rs, rowNum) -> {
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
-        user.setLevel(Level.valueOf(rs.getInt("level")));
-        user.setLogin(rs.getInt("login"));
-        user.setRecommend(rs.getInt("recommend"));
-        user.setEmail(rs.getString("email"));
-        return user;
-    };
+    User get(String id);
 
-    public void setDataSource(DataSource dataSource) {
+    List<User> getAll();
 
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    void deleteAll();
 
-    public void add(User user) {
+    int getCount();
 
-        jdbcTemplate.update("INSERT INTO users(id, name, password, level, login, recommend, email) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                user.getId(),
-                user.getName(),
-                user.getPassword(),
-                user.getLevel().intValue(),
-                user.getLogin(),
-                user.getRecommend(),
-                user.getEmail()
-        );
-    }
-
-    public User get(String id) {
-
-        return this.jdbcTemplate.queryForObject("SELECT  * FROM users WHERE id = ?", new Object[]{id}, userRowMapper);
-    }
-
-    public List<User> getAll() {
-
-        return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id ASC", userRowMapper);
-    }
-
-    public void deleteAll() {
-
-        jdbcTemplate.update("DELETE FROM users");
-    }
-
-    public int getCount() {
-
-        return this.jdbcTemplate.queryForObject("SELECT count(*) FROM users", (rs, rowNum) -> rs.getInt(1));
-    }
-
-    public void update(User user) {
-        this.jdbcTemplate.update(
-                "UPDATE users set name = ?" +
-                        ", password = ?" +
-                        ", level = ?" +
-                        ", login = ?" +
-                        ", recommend = ?" +
-                        ", email = ?" +
-                        " WHERE id = ?",
-                user.getName(),
-                user.getPassword(),
-                user.getLevel().intValue(),
-                user.getLogin(),
-                user.getRecommend(),
-                user.getEmail(),
-                user.getId()
-        );
-    }
+    void update(User user);
 }

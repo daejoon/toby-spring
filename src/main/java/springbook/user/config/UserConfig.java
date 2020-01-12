@@ -6,10 +6,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
-import springbook.user.dao.ConnectionMaker;
-import springbook.user.dao.CountingConnectionMaker;
-import springbook.user.dao.DConnectionMaker;
-import springbook.user.dao.UserDao;
+import springbook.user.dao.*;
 import springbook.user.service.DummyMailSender;
 import springbook.user.service.UserService;
 import springbook.user.service.UserServiceImpl;
@@ -22,7 +19,7 @@ public class UserConfig {
 
     @Bean
     public UserDao userDao() {
-        UserDao userDao = new UserDao();
+        UserDaoImpl userDao = new UserDaoImpl();
         userDao.setDataSource(dataSource());
         return userDao;
     }

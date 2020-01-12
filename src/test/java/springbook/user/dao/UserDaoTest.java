@@ -29,7 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class UserDaoTest {
 
     @Autowired
-    private UserDao dao;
+    private UserDaoImpl dao;
 
     private User user1;
     private User user2;
