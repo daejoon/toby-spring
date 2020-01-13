@@ -1,5 +1,8 @@
 package springbook.user.config;
 
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -9,8 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.learningtest.factory.MessageFactoryBean;
 import springbook.user.dao.*;
 import springbook.user.service.DummyMailSender;
-import springbook.user.service.TxProxyFactoryBean;
-import springbook.user.service.UserService;
+import springbook.user.service.TransactionAdvice;
 import springbook.user.service.UserServiceImpl;
 
 import javax.sql.DataSource;
@@ -25,14 +27,22 @@ public class UserConfig {
         return userDao;
     }
 
+//    @Bean("userService")
+//    public TxProxyFactoryBean userServiceTx() {
+//        TxProxyFactoryBean txProxyFactoryBean = new TxProxyFactoryBean();
+//        txProxyFactoryBean.setTarget(userService());
+//        txProxyFactoryBean.setTransactionManager(platformTransactionManager());
+//        txProxyFactoryBean.setPattern("upgradeLevels");
+//        txProxyFactoryBean.setServiceInstance(UserService.class);
+//        return txProxyFactoryBean;
+//    }
+
     @Bean("userService")
-    public TxProxyFactoryBean userServiceTx() {
-        TxProxyFactoryBean txProxyFactoryBean = new TxProxyFactoryBean();
-        txProxyFactoryBean.setTarget(userService());
-        txProxyFactoryBean.setTransactionManager(platformTransactionManager());
-        txProxyFactoryBean.setPattern("upgradeLevels");
-        txProxyFactoryBean.setServiceInstance(UserService.class);
-        return txProxyFactoryBean;
+    public ProxyFactoryBean userServicePfb() {
+        ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+        proxyFactoryBean.setTarget(userService());
+        proxyFactoryBean.addAdvisor(defaultPointcutAdvisor());
+        return proxyFactoryBean;
     }
 
     @Bean("userServiceImpl")
@@ -86,4 +96,25 @@ public class UserConfig {
         return messageFactoryBean;
     }
 
+    @Bean
+    public TransactionAdvice transactionAdvice() {
+        TransactionAdvice transactionAdvice = new TransactionAdvice();
+        transactionAdvice.setTransactionManager(platformTransactionManager());
+        return transactionAdvice;
+    }
+
+    @Bean("transactionPointcut")
+    public NameMatchMethodPointcut nameMatchMethodPointcut() {
+        NameMatchMethodPointcut nameMatchMethodPointcut = new NameMatchMethodPointcut();
+        nameMatchMethodPointcut.setMappedName("upgrade*");
+        return nameMatchMethodPointcut;
+    }
+
+    @Bean("transactionAdvisor")
+    public DefaultPointcutAdvisor defaultPointcutAdvisor() {
+        DefaultPointcutAdvisor defaultPointcutAdvisor = new DefaultPointcutAdvisor();
+        defaultPointcutAdvisor.setAdvice(transactionAdvice());
+        defaultPointcutAdvisor.setPointcut(nameMatchMethodPointcut());
+        return defaultPointcutAdvisor;
+    }
 }

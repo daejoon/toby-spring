@@ -16,7 +16,7 @@ public class DynamicProxyTest {
     public void proxyFactoryBean() {
         ProxyFactoryBean pfBean = new ProxyFactoryBean();
         pfBean.setTarget(new HelloTarget());
-        pfBean.addAdvice(new UppgercaseAdvice());
+        pfBean.addAdvice(new UppercaseAdvice());
 
         Hello proxiedHello = (Hello) pfBean.getObject();
 
@@ -33,7 +33,7 @@ public class DynamicProxyTest {
         NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
         pointcut.setMappedName("sayH*");
 
-        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppgercaseAdvice()));
+        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
 
         Hello proxiedHello = (Hello) pfBean.getObject();
 
@@ -42,7 +42,7 @@ public class DynamicProxyTest {
         assertThat(proxiedHello.sayThankYou("Toby"), is("Thank You Toby"));
     }
 
-    private class UppgercaseAdvice implements MethodInterceptor {
+    private class UppercaseAdvice implements MethodInterceptor {
         @Override
         public Object invoke(MethodInvocation invocation) throws Throwable {
             String ret = (String) invocation.proceed();
