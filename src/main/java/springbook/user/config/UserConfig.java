@@ -69,10 +69,10 @@ public class UserConfig {
     public DataSource dataSource() {
 
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        dataSource.setDriverClass(org.mariadb.jdbc.Driver.class);
-        dataSource.setUrl("jdbc:mysql://localhost/springbook");
+        dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class);
+        dataSource.setUrl("jdbc:mysql://localhost:3307/springbook");
         dataSource.setUsername("spring");
-        dataSource.setPassword("book");
+        dataSource.setPassword("spring");
         return dataSource;
     }
 
